@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 //asda
+//some changes
 namespace ToyManagementSystem.Models
 {
     public partial class Category
