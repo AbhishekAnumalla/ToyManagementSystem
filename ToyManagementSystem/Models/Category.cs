@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 #nullable disable
-
+//asda
 namespace ToyManagementSystem.Models
 {
     public partial class Category
