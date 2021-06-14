@@ -1,0 +1,215 @@
+﻿
+@{ ViewData["Title1"] = "IndexT"; }
+@section Scripts{
+    <script>$(document).ready(() => {
+		function GetAll() {
+			$.ajax({
+				type: "GET",
+                url: "https://localhost:44307/api/Toy/",
+				contentType: 'application/json',
+				success: function (response) {
+					console.log(response)
+					$.each(response, (i, item) => {
+						let row = '<tr><td>' + item.toyId + '</td><td>' + item.title + '</td><td>' +
+                            item.manufactureDate + '</td><td>' + item.price + '</td><td>' + item.categoryId+ '</td></tr>';
+						$('#list').append(row);
+					})
+				},
+				error: function (err) {
+					console.log(err.responseText)
+				}
+			})
+		}
+	GetAll();
+
+	@*	$('#btnsrch1').click(() => {
+			let CId = Number($('#CId').val()); //returns id Textbox value
+			$.ajax({
+				type: "GET",
+				url: "https://localhost:44307/api/Toy/get/" + CId,
+				contentType: 'application/json',
+				success: function (response) {
+					console.log(response)
+					$('#title').val(response.title);
+					$('#date').val(response.manufactureDate);
+					Number($('#price').val(response.price));
+					Number($('#Id').val(response.toyId));
+					
+				},
+				error: function (err) {
+					console.log(err.responseText)
+					$('span').html(err.responseText);
+				}
+			})
+		})*@
+
+    $('#btnsrch').click(() => {
+        let CId = Number($('#CId').val()); //returns Category ID Textbox value
+        $.ajax({
+            type: "GET",
+            url: "https://localhost:44307/api/Toy/" + CId,
+            contentType: 'application/json',
+            success: function (response) {
+                console.log(response)
+                $.each(response, (i, item) => {
+                    let row = '<tr><td>' + item.toyId + '</td><td>' + item.title + '</td><td>' + item.manufactureDate + '</td><td>'
+                        + item.price + '</td><td>' + item.categoryId + '</td></tr>';                      
+                    $('#list1').append(row);
+                })
+            },
+            error: function (err) {
+                console.log(err.responseText)
+                $('span').html(err.responseText);
+            }
+        })
+    })
+
+	$('#btnadd').click(() => {
+
+		let toyId = Number($('#Id').val());
+		let title = $('#title').val();
+		let manufactureDate = $('#date').val();
+		let price = Number($('#price').val());
+		let categoryId = Number($('#CId').val());
+    let item = { toyId: toyId, title: title, manufactureDate: manufactureDate, price: price, categoryId: categoryId};
+			console.log(item)
+
+			$.ajax({
+				type: "POST",
+                url: "https://localhost:44307/api/Toy/",
+				data: JSON.stringify(item), //converts Javascript object into Json
+				contentType: 'application/json',
+				success: function (response) {
+					console.log(response)
+					$('span').html(response);
+					window.location.reload(); //reloads the page
+				},
+				error: function (err) {
+					console.log(err.responseText)
+					$('span').html(err.responseText);
+				}
+			})
+    })
+
+    $('#btnedit').click(() => {
+        let toyId = Number($('#Id').val());
+        let title = $('#title').val();
+        let manufactureDate = $('#date').val();
+        let price = Number($('#price').val());
+        let categoryId = Number($('#CId').val());
+        let item = { toyId: toyId, title: title, manufactureDate: manufactureDate, price: price, categoryId: categoryId };
+
+        $.ajax({
+            type: "PUT",
+            url: "https://localhost:44307/api/Toy/" + toyId,
+            data: JSON.stringify(item), //converts Javascript object into Json
+            contentType: 'application/json',
+            success: function (response) {
+                console.log(response)
+                $('span').html(response);
+                window.location.reload(); //reloads the page
+            },
+            error: function (err) {
+                console.log(err.responseText)
+                $('span').html(err.responseText);
+            }
+        })
+    })
+
+
+
+			$('#btndelete').click(() => {
+                let toyId = Number($('#Id').val());
+                let title = $('#title').val();
+                let manufactureDate = $('#date').val();
+                let price = Number($('#price').val());
+                let categoryId = Number($('#CId').val());
+			let item = { toyId: toyId, title: title, manufactureDate: manufactureDate, price: price, categoryId: categoryId };
+				console.log(item)
+
+				$.ajax({
+					type: "DELETE",
+					url: "https://localhost:44307/api/Toy/" + toyId,
+					data: JSON.stringify(item), //converts Javascript object into Json
+					contentType: 'application/json',
+					success: function (response) {
+						console.log(response)
+						$('span').html(response);
+						window.location.reload(); //reloads the page
+					},
+					error: function (err) {
+						console.log(err.responseText)
+						$('span').html(err.responseText);
+					}
+				})
+			})
+
+            
+
+	})</script>
+}
+<h1>Index</h1>
+<div class="container">
+    <table class="table table-bordered table-striped table-dark">
+        <tr>
+            <td>TOY ID</td>
+            <td>@Html.TextBox("Id")</td>
+        </tr>
+        <tr>
+            <td>TITLE</td>
+            <td>@Html.TextBox("title")</td>
+        </tr>
+        <tr>
+            <td>MANUFACTURE DATE</td>
+            <td>@Html.TextBox("date")</td>
+        </tr>
+        <tr>
+            <td>PRICE</td>
+            <td>@Html.TextBox("price")</td>
+        </tr>
+        <tr>
+            <td>CATEGORY ID</td>
+            <td>@Html.TextBox("CId")</td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <button class="btn btn-primary" id="btnadd">Add</button>
+                <button class="btn btn-info" id="btnsrch">Search</button>
+                <button class="btn btn-secondary" id="btnedit">Edit</button>
+                <button class="btn btn-danger" id="btndelete">Delete</button>
+                
+            </td>
+            @*<td><button class="btn btn-light" id="btnsrch1">Fetch</button></td>*@
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span class="text-info"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="container">
+    <table class="table table-bordered table-dark table-hover" id="list">
+        <tr>
+            <th>Toy ID</th>
+            <th>Title</th>
+            <th>Manufacture Date</th>
+            <th>Price</th>
+			<th>Category ID</th>
+        </tr>
+    </table>
+</div>
+
+<div class="container">
+    <table class="table table-bordered table-dark table-hover" id="list1">
+        <tr>
+            <th>Toy ID</th>
+            <th>Title</th>
+            <th>Manufacture Date</th>
+            <th>Price</th>
+            <th>Category ID</th>
+        </tr>
+    </table>
+</div>
+

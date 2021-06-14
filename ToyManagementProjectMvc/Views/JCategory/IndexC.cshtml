@@ -1,0 +1,101 @@
+﻿
+@{ ViewData["Title"] = "IndexC"; }
+@section Scripts{
+    <script>
+    $(document).ready(() => {
+            function GetAll() {
+                $.ajax({
+                    type: "GET",
+                    url: "https://localhost:44307/api/Category/",
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log(response)
+                        $.each(response, (i, item) => {
+                            let row = '<tr><td>' + item.categoryId + '</td><td>' + item.description + '</td></tr>';
+                                
+                            $('#list').append(row);
+                        })
+                    },
+                    error: function (err) {
+                        console.log(err.responseText)
+                    }
+                })
+            }
+            GetAll();
+            $('#btnsrch').click(() => {
+                let idno = Number($('#Id').val()); //returns id Textbox value
+                $.ajax({
+                    type: "GET",
+                    url: "https://localhost:44307/api/Category/" + idno,
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log(response)
+                        $('#Des').val(response.description);
+                    },
+                    error: function (err) {
+                        console.log(err.responseText)
+                        $('span').html(err.responseText);
+                    }
+                })
+            })
+            $('#btnadd').click(() => {
+
+                let categoryId = Number($('#Id').val());
+                let description = $('#Des').val();
+                let item = { categoryId: categoryId, description: description };
+                console.log(item)
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://localhost:44310/api/DeliveryAgent",
+                    data: JSON.stringify(item), //converts Javascript object into Json
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log(response)
+                        $('span').html(response);
+                        window.location.reload(); //reloads the page
+                    },
+                    error: function (err) {
+                        console.log(err.responseText)
+                        $('span').html(err.responseText);
+                    }
+                })
+            })
+
+        })</script>
+}
+
+<h1><pre> Categories </pre></h1>
+<div class="container">
+    <table class="table table-bordered table-striped">
+        <tr>
+            <td>Category Id</td>
+            <td>@Html.TextBox("Id")</td>
+        </tr>
+        <tr>
+            <td>Category Name</td>
+            <td>@Html.TextBox("Des")</td>
+        </tr>
+
+        <tr>
+            <td colspan="1">
+                <button class="btn btn-primary" id="btnadd">Add</button>
+                <button class="btn btn-info" id="btnsrch">Search</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <span class="text-info"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="container">
+    <table class="table table-bordered table-striped" id="list">
+        <tr>
+            <th>Category Id</th>
+            <th>Description</th>
+        </tr>
+    </table>
+</div>
+
